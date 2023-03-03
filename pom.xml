@@ -577,7 +577,7 @@
                             </platforms>
                         </from>
                         <to>
-                            <image>blog:latest</image>
+                            <image>isafinal-blog:latest</image>
                         </to>
                         <container>
                             <entrypoint>
