@@ -577,7 +577,7 @@
                             </platforms>
                         </from>
                         <to>
-                            <image>isafinal-blog:latest</image>
+                            <image>francoma/isafinal-blog:latest</image>
                             <tags>
                                 <tag>${project.version}</tag>
                                 <tag>latest</tag>
