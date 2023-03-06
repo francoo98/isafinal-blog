@@ -15,6 +15,15 @@ services:
     volumes:
       - mariadb-isa-blog:/var/lib/mysql
 
+  isa-blog-postgres:
+    image: postgres
+    container_name: isa-blog-postgres
+    environment:
+      POSTGRES_USER: blog
+      POSTGRES_PASSWORD:
+    networks:
+      - isa-blog-backend
+
   isa-blog-backend:
     image: francoma/isafinal-blog
     container_name: isa-blog-backend
