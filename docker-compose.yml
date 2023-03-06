@@ -20,7 +20,7 @@ services:
     container_name: isa-blog-postgres
     environment:
       POSTGRES_USER: blog
-      POSTGRES_PASSWORD:
+      POSTGRES_PASSWORD: blog
     networks:
       - isa-blog-backend
 
