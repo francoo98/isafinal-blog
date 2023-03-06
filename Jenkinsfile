@@ -45,7 +45,7 @@ node {
     //}
 
     stage('packaging') {
-        sh "./mvnw -ntp verify -P-webapp -Pdev -DskipTests"
+        sh "./mvnw -ntp verify -P-webapp -Pprod -DskipTests"
         archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
     }
 
@@ -53,7 +53,7 @@ node {
     stage('publish docker') {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-login', passwordVariable:
         'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
-            sh "./mvnw -ntp -Pdev jib:build"
+            sh "./mvnw -ntp jib:build"
         }
     }
 }
