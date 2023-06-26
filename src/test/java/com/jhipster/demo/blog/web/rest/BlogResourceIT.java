@@ -96,6 +96,22 @@ class BlogResourceIT {
         assertThat(testBlog.getHandle()).isEqualTo(DEFAULT_HANDLE);
     }
 
+    // Punto dos: crear dos tests de unidad
+    @Test
+    @Transactional
+    void createBlogWithInvalidName() throws Exception {
+        int databaseSizeBeforeCreate = blogRepository.findAll().size();
+        this.blog.setName("in");
+        // Create the Blog
+        restBlogMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(blog)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Blog in the database
+        List<Blog> blogList = blogRepository.findAll();
+        assertThat(blogList).hasSize(databaseSizeBeforeCreate);
+    }
+
     @Test
     @Transactional
     void createBlogWithExistingId() throws Exception {

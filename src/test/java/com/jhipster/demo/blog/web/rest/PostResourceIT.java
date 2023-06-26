@@ -2,12 +2,16 @@ package com.jhipster.demo.blog.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.jhipster.demo.blog.IntegrationTest;
 import com.jhipster.demo.blog.domain.Post;
+import com.jhipster.demo.blog.domain.Blog;
 import com.jhipster.demo.blog.repository.PostRepository;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -113,6 +117,23 @@ class PostResourceIT {
         assertThat(testPost.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPost.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testPost.getDate()).isEqualTo(DEFAULT_DATE);
+    }
+
+    // Punto dos: crear dos tests de unidad
+    @Test
+    @Transactional
+    void createPostWithoutBlog() throws Exception {
+        int databaseSizeBeforeCreate = postRepository.findAll().size();
+        Blog blog = new Blog();
+        this.post.setBlog(null);
+
+        restPostMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(post)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Post in the database
+        List<Post> postList = postRepository.findAll();
+        assertThat(postList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -444,5 +465,22 @@ class PostResourceIT {
         // Validate the database contains one less item
         List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    void deletePost2() throws Exception {
+        // Initialize the database
+        postRepository.saveAndFlush(post);
+
+        int databaseSizeBeforeDelete = postRepository.findAll().size();
+
+        // Delete the post
+        restPostMockMvc
+            .perform(delete(ENTITY_API_URL_ID, 123321).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        List<Post> postList = postRepository.findAll();
+        assertThat(postList).hasSize(databaseSizeBeforeDelete);
     }
 }
