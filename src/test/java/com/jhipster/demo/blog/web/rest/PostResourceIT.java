@@ -124,14 +124,13 @@ class PostResourceIT {
     @Transactional
     void createPostWithoutBlog() throws Exception {
         int databaseSizeBeforeCreate = postRepository.findAll().size();
-        Blog blog = new Blog();
         this.post.setBlog(null);
 
         restPostMockMvc
             .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(post)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Post in the database
+        // Verificar que no se creo el post
         List<Post> postList = postRepository.findAll();
         assertThat(postList).hasSize(databaseSizeBeforeCreate);
     }
