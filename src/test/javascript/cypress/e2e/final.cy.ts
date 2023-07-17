@@ -1,10 +1,7 @@
 describe('Final', () => {
 
-  const username = Cypress.env('E2E_USERNAME') ?? 'admin';
-  const password = Cypress.env('E2E_PASSWORD') ?? 'admin';
-
   beforeEach(() => {
-    cy.login(username, password);
+    cy.login(Cypress.env('username'), Cypress.env('password'));
   });
 
   it('Cambiar nombre de post', () => {
