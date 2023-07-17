@@ -136,6 +136,7 @@ Desktop.ini
 *.*~
 *~
 .merge_file*
+cypress.env.json
 
 ######################
 # Gradle Wrapper
