@@ -1,6 +1,8 @@
 package com.jhipster.demo.blog.web.rest;
 
+import com.jhipster.demo.blog.domain.Blog;
 import com.jhipster.demo.blog.domain.Post;
+import com.jhipster.demo.blog.repository.BlogRepository;
 import com.jhipster.demo.blog.repository.PostRepository;
 import com.jhipster.demo.blog.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
@@ -42,8 +44,11 @@ public class PostResource {
 
     private final PostRepository postRepository;
 
-    public PostResource(PostRepository postRepository) {
+    private final BlogRepository blogRepository;
+
+    public PostResource(PostRepository postRepository, BlogRepository blogRepository) {
         this.postRepository = postRepository;
+        this.blogRepository = blogRepository;
     }
 
     /**
@@ -199,5 +204,13 @@ public class PostResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/posts/blog/{id}")
+    public ResponseEntity<List<Post>> getPostsByBlog(@PathVariable Long id) {
+        log.debug("REST request to get Posts by blog : {}", id);
+        Blog blog = blogRepository.findById(id).get();
+        List<Post> posts = postRepository.findByBlog(blog);
+        return ResponseEntity.ok().body(posts);
     }
 }
